@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="Foto de perfil" class="profile-avatar rounded-circle mb-3">
+                {% else %}
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3 profile-avatar">
+                        <i class="fas fa-user fa-3x text-muted"></i>
+                    </div>
+                {% endif %}
+                
+                <h4>{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted">{{ profile.get_user_type_display }}</p>
+                
+                {% if profile.location %}
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt me-1"></i>{{ profile.location }}
+                    </p>
+                {% endif %}
+                
+                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary">
+                    <i class="fas fa-edit me-1"></i>Editar Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Información del Perfil</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Nombre completo:</strong></div>
+                    <div class="col-sm-9">{{ user.get_full_name|default:"No especificado" }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Email:</strong></div>
+                    <div class="col-sm-9">{{ user.email }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Tipo de usuario:</strong></div>
+                    <div class="col-sm-9">{{ profile.get_user_type_display }}</div>
+                </div>
+                
+                {% if profile.phone %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Teléfono:</strong></div>
+                        <div class="col-sm-9">{{ profile.phone }}</div>
+                    </div>
+                {% endif %}
+                
+                {% if profile.location %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Ubicación:</strong></div>
+                        <div class="col-sm-9">{{ profile.location }}</div>
+                    </div>
+                {% endif %}
+                
+                {% if profile.experience_years %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Años de experiencia:</strong></div>
+                        <div class="col-sm-9">{{ profile.experience_years }} años</div>
+                    </div>
+                {% endif %}
+                
+                {% if profile.bio %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Biografía:</strong></div>
+                        <div class="col-sm-9">{{ profile.bio|linebreaks }}</div>
+                    </div>
+                {% endif %}
+                
+                {% if profile.skills %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Habilidades:</strong></div>
+                        <div class="col-sm-9">{{ profile.skills }}</div>
+                    </div>
+                {% endif %}
+                
+                {% if profile.resume %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>CV:</strong></div>
+                        <div class="col-sm-9">
+                            <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-download me-1"></i>Descargar CV
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Miembro desde:</strong></div>
+                    <div class="col-sm-9">{{ profile.created_at|date:"d/m/Y" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        {% if profile.user_type == 'job_seeker' %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Actividad Reciente</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h4 class="text-primary">{{ user.jobapplication_set.count }}</h4>
+                                <p class="text-muted">Aplicaciones enviadas</p>
+                                <a href="{% url 'jobs:my_applications' %}" class="btn btn-outline-primary btn-sm">
+                                    Ver aplicaciones
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h4 class="text-success">{{ user.jobapplication_set.filter.count }}</h4>
+                                <p class="text-muted">Ofertas disponibles</p>
+                                <a href="{% url 'jobs:list' %}" class="btn btn-outline-success btn-sm">
+                                    Buscar empleos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
