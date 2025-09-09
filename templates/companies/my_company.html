@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Empresa - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-building me-2"></i>Mi Empresa</h1>
+            <a href="{% url 'companies:create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Crear Nueva Empresa
+            </a>
+        </div>
+
+        {% if companies %}
+            {% for company in companies %}
+                <div class="card company-card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 text-center">
+                                {% if company.logo %}
+                                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo rounded">
+                                {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-building fa-2x text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <h4 class="card-title">{{ company.name }}</h4>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ company.location }}
+                                    {% if company.size %}
+                                        | <i class="fas fa-users me-1"></i>{{ company.get_size_display }}
+                                    {% endif %}
+                                    {% if company.industry %}
+                                        | <i class="fas fa-industry me-1"></i>{{ company.industry }}
+                                    {% endif %}
+                                </p>
+                                {% if company.website %}
+                                    <p class="mb-2">
+                                        <i class="fas fa-globe me-1"></i>
+                                        <a href="{{ company.website }}" target="_blank" class="text-decoration-none">
+                                            {{ company.website }}
+                                        </a>
+                                    </p>
+                                {% endif %}
+                                {% if company.description %}
+                                    <p class="card-text">{{ company.description|truncatewords:30 }}</p>
+                                {% endif %}
+                                <small class="text-muted">
+                                    Creada {{ company.created_at|timesince }} ago
+                                </small>
+                            </div>
+                            
+                            <div class="col-md-2 text-end">
+                                <div class="btn-group-vertical" role="group">
+                                    <a href="{% url 'companies:detail' company.pk %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>Ver
+                                    </a>
+                                    <a href="{% url 'companies:edit' company.pk %}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-edit me-1"></i>Editar
+                                    </a>
+                                    <a href="{% url 'jobs:create' %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Nueva Oferta
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Jobs Section -->
+                        {% if company.job_set.all %}
+                            <hr>
+                            <h6 class="mb-3">Ofertas de Trabajo ({{ company.job_set.count }})</h6>
+                            <div class="row">
+                                {% for job in company.job_set.all|slice:":3" %}
+                                    <div class="col-md-4 mb-2">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body p-3">
+                                                <h6 class="card-title mb-1">
+                                                    <a href="{% url 'jobs:detail' job.pk %}" class="text-decoration-none">
+                                                        {{ job.title }}
+                                                    </a>
+                                                </h6>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}
+                                                    {% if job.remote_work %}
+                                                        <span class="remote-badge ms-1">Remoto</span>
+                                                    {% endif %}
+                                                </small>
+                                                <div class="mt-2">
+                                                    <span class="badge bg-{{ job.is_active|yesno:'success,secondary' }}">
+                                                        {{ job.is_active|yesno:'Activo,Inactivo' }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if company.job_set.count > 3 %}
+                                <div class="text-center">
+                                    <a href="{% url 'jobs:my_jobs' %}" class="btn btn-outline-primary btn-sm">
+                                        Ver todas las ofertas ({{ company.job_set.count }})
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <hr>
+                            <div class="text-center py-3">
+                                <i class="fas fa-briefcase fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-2">Aún no has publicado ofertas de trabajo</p>
+                                <a href="{% url 'jobs:create' %}" class="btn btn-success">
+                                    <i class="fas fa-plus me-1"></i>Publicar Primera Oferta
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                <h3>No tienes empresas registradas</h3>
+                <p class="text-muted mb-4">Para publicar ofertas de trabajo, primero necesitas crear una empresa.</p>
+                <a href="{% url 'companies:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Crear Mi Primera Empresa
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center mb-0">
+                    <i class="fas fa-user-edit me-2"></i>Editar Perfil
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.user_type.id_for_label }}" class="form-label">
+                                Tipo de usuario *
+                            </label>
+                            {{ form.user_type }}
+                            {% if form.user_type.errors %}
+                                <div class="text-danger small">
+                                    {{ form.user_type.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                Teléfono
+                            </label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger small">
+                                    {{ form.phone.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.location.id_for_label }}" class="form-label">
+                                Ubicación
+                            </label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                                <div class="text-danger small">
+                                    {{ form.location.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.experience_years.id_for_label }}" class="form-label">
+                                Años de experiencia
+                            </label>
+                            {{ form.experience_years }}
+                            {% if form.experience_years.errors %}
+                                <div class="text-danger small">
+                                    {{ form.experience_years.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.bio.id_for_label }}" class="form-label">
+                            Biografía
+                        </label>
+                        {{ form.bio }}
+                        {% if form.bio.errors %}
+                            <div class="text-danger small">
+                                {{ form.bio.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Cuéntanos sobre ti, tu experiencia y objetivos profesionales.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.skills.id_for_label }}" class="form-label">
+                            Habilidades
+                        </label>
+                        {{ form.skills }}
+                        {% if form.skills.errors %}
+                            <div class="text-danger small">
+                                {{ form.skills.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Separa las habilidades con comas (ej: Python, Django, JavaScript).</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">
+                                Foto de perfil
+                            </label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <div class="text-danger small">
+                                    {{ form.profile_picture.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.resume.id_for_label }}" class="form-label">
+                                CV (Curriculum Vitae)
+                            </label>
+                            {{ form.resume }}
+                            {% if form.resume.errors %}
+                                <div class="text-danger small">
+                                    {{ form.resume.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Sube tu CV en formato PDF.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver al Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add bootstrap classes to form fields
+    const formFields = document.querySelectorAll('input[type="text"], input[type="number"], textarea, select, input[type="file"]');
+    formFields.forEach(field => {
+        field.classList.add('form-control');
+    });
+});
+</script>
+{% endblock %}

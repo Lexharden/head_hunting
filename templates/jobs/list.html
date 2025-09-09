@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Ofertas de Trabajo - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-briefcase me-2"></i>Ofertas de Trabajo</h1>
+            {% if user.is_authenticated and user.userprofile.user_type == 'employer' %}
+                <a href="{% url 'jobs:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Publicar Oferta
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="search-filters mb-4">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    {{ search_form.q.label_tag }}
+                    {{ search_form.q }}
+                </div>
+                <div class="col-md-2">
+                    {{ search_form.location.label_tag }}
+                    {{ search_form.location }}
+                </div>
+                <div class="col-md-2">
+                    {{ search_form.job_type.label_tag }}
+                    {{ search_form.job_type }}
+                </div>
+                <div class="col-md-2">
+                    {{ search_form.experience_level.label_tag }}
+                    {{ search_form.experience_level }}
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="form-check mb-2">
+                        {{ search_form.remote_work }}
+                        {{ search_form.remote_work.label_tag }}
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Buscar
+                    </button>
+                    <a href="{% url 'jobs:list' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-times me-1"></i>Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Job Results -->
+        {% if jobs %}
+            <div class="row">
+                {% for job in jobs %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card job-card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="card-title">
+                                            <a href="{% url 'jobs:detail' job.pk %}" class="text-decoration-none">
+                                                {{ job.title }}
+                                            </a>
+                                        </h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            <i class="fas fa-building me-1"></i>{{ job.company.name }}
+                                        </h6>
+                                        <p class="card-text">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}
+                                            {% if job.remote_work %}
+                                                <span class="remote-badge ms-2">Remoto</span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="card-text">{{ job.description|truncatewords:20 }}</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <div class="mb-2">
+                                            <span class="job-type-badge">{{ job.get_job_type_display }}</span>
+                                            <span class="experience-badge ms-1">{{ job.get_experience_level_display }}</span>
+                                        </div>
+                                        {% if job.salary_min or job.salary_max %}
+                                            <div class="mb-2">
+                                                <span class="salary-badge">{{ job.salary_range }}</span>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <small class="text-muted">
+                                                Publicado {{ job.created_at|timesince }} ago
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Primera</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Anterior</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Siguiente</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Última</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h3>No se encontraron ofertas de trabajo</h3>
+                <p class="text-muted">Intenta ajustar tus criterios de búsqueda o explora todas las ofertas disponibles.</p>
+                <a href="{% url 'jobs:list' %}" class="btn btn-primary">Ver todas las ofertas</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add bootstrap classes to form fields
+    const formFields = document.querySelectorAll('input[type="text"], select');
+    formFields.forEach(field => {
+        field.classList.add('form-control');
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Publicar Oferta - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center mb-0">
+                    <i class="fas fa-briefcase me-2"></i>Publicar Oferta de Trabajo
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">
+                                Título del puesto *
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.company.id_for_label }}" class="form-label">
+                                Empresa *
+                            </label>
+                            {{ form.company }}
+                            {% if form.company.errors %}
+                                <div class="text-danger small">
+                                    {{ form.company.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                            Descripción del puesto *
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small">
+                                {{ form.description.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.requirements.id_for_label }}" class="form-label">
+                            Requisitos *
+                        </label>
+                        {{ form.requirements }}
+                        {% if form.requirements.errors %}
+                            <div class="text-danger small">
+                                {{ form.requirements.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.location.id_for_label }}" class="form-label">
+                                Ubicación *
+                            </label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                                <div class="text-danger small">
+                                    {{ form.location.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.job_type.id_for_label }}" class="form-label">
+                                Tipo de trabajo
+                            </label>
+                            {{ form.job_type }}
+                            {% if form.job_type.errors %}
+                                <div class="text-danger small">
+                                    {{ form.job_type.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.experience_level.id_for_label }}" class="form-label">
+                                Nivel de experiencia
+                            </label>
+                            {{ form.experience_level }}
+                            {% if form.experience_level.errors %}
+                                <div class="text-danger small">
+                                    {{ form.experience_level.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.salary_min.id_for_label }}" class="form-label">
+                                Salario mínimo
+                            </label>
+                            {{ form.salary_min }}
+                            {% if form.salary_min.errors %}
+                                <div class="text-danger small">
+                                    {{ form.salary_min.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.salary_max.id_for_label }}" class="form-label">
+                                Salario máximo
+                            </label>
+                            {{ form.salary_max }}
+                            {% if form.salary_max.errors %}
+                                <div class="text-danger small">
+                                    {{ form.salary_max.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.currency.id_for_label }}" class="form-label">
+                                Moneda
+                            </label>
+                            {{ form.currency }}
+                            {% if form.currency.errors %}
+                                <div class="text-danger small">
+                                    {{ form.currency.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.skills_required.id_for_label }}" class="form-label">
+                                Habilidades requeridas
+                            </label>
+                            {{ form.skills_required }}
+                            {% if form.skills_required.errors %}
+                                <div class="text-danger small">
+                                    {{ form.skills_required.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.expires_at.id_for_label }}" class="form-label">
+                                Fecha de expiración
+                            </label>
+                            {{ form.expires_at }}
+                            {% if form.expires_at.errors %}
+                                <div class="text-danger small">
+                                    {{ form.expires_at.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.remote_work }}
+                            <label class="form-check-label" for="{{ form.remote_work.id_for_label }}">
+                                Trabajo remoto disponible
+                            </label>
+                        </div>
+                        {% if form.remote_work.errors %}
+                            <div class="text-danger small">
+                                {{ form.remote_work.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i>Publicar Oferta
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <a href="{% url 'jobs:my_jobs' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver a Mis Ofertas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add bootstrap classes to form fields
+    const formFields = document.querySelectorAll('input[type="text"], input[type="number"], textarea, select, input[type="datetime-local"]');
+    formFields.forEach(field => {
+        field.classList.add('form-control');
+    });
+    
+    // Style checkbox
+    const checkbox = document.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+        checkbox.classList.add('form-check-input');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Aplicaciones - Head Hunting{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-file-alt me-2"></i>Mis Aplicaciones</h1>
+            <a href="{% url 'jobs:list' %}" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i>Buscar más empleos
+            </a>
+        </div>
+
+        {% if applications %}
+            <div class="row">
+                {% for application in applications %}
+                    <div class="col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="card-title">
+                                            <a href="{% url 'jobs:detail' application.job.pk %}" class="text-decoration-none">
+                                                {{ application.job.title }}
+                                            </a>
+                                        </h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            <i class="fas fa-building me-1"></i>{{ application.job.company.name }}
+                                        </h6>
+                                        <p class="text-muted mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ application.job.location }}
+                                            {% if application.job.remote_work %}
+                                                <span class="remote-badge ms-2">Remoto</span>
+                                            {% endif %}
+                                        </p>
+                                        
+                                        {% if application.cover_letter %}
+                                            <div class="mb-2">
+                                                <strong>Carta de presentación:</strong>
+                                                <p class="text-muted small">{{ application.cover_letter|truncatewords:30 }}</p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if application.notes %}
+                                            <div class="alert alert-info small">
+                                                <strong>Notas del empleador:</strong>
+                                                {{ application.notes }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-md-4 text-md-end">
+                                        <div class="mb-3">
+                                            <span class="badge status-{{ application.status }} p-2">
+                                                {{ application.get_status_display }}
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <small class="text-muted d-block">
+                                                <i class="fas fa-calendar me-1"></i>Aplicado {{ application.applied_at|timesince }} ago
+                                            </small>
+                                            {% if application.updated_at != application.applied_at %}
+                                                <small class="text-muted d-block">
+                                                    <i class="fas fa-sync me-1"></i>Actualizado {{ application.updated_at|timesince }} ago
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div>
+                                            <a href="{% url 'jobs:detail' application.job.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>Ver Oferta
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Statistics -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6>Resumen de aplicaciones</h6>
+                            <div class="row text-center">
+                                <div class="col-md-2">
+                                    <div class="text-primary">
+                                        <strong>{{ applications|length }}</strong>
+                                        <small class="d-block">Total</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-info">
+                                        <strong>{{ applications|length }}</strong>
+                                        <small class="d-block">Aplicadas</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-warning">
+                                        <strong>0</strong>
+                                        <small class="d-block">En revisión</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-info">
+                                        <strong>0</strong>
+                                        <small class="d-block">Entrevista</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-success">
+                                        <strong>0</strong>
+                                        <small class="d-block">Aceptadas</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-danger">
+                                        <strong>0</strong>
+                                        <small class="d-block">Rechazadas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                <h3>No has aplicado a ninguna oferta</h3>
+                <p class="text-muted mb-4">Explora las ofertas disponibles y encuentra tu próximo empleo.</p>
+                <a href="{% url 'jobs:list' %}" class="btn btn-primary">
+                    <i class="fas fa-search me-1"></i>Buscar Empleos
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
